@@ -30,6 +30,8 @@ func SetupRouter(P usecase.PostUseCase, T usecase.ThreadUseCase, authClient *cli
 	go hub.Run()
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// API v2 group
 	api := router.Group("/api/v2")
 	{
 		api.GET("/threads", forumHandler.GetAllThread)
@@ -54,27 +56,29 @@ func SetupRouter(P usecase.PostUseCase, T usecase.ThreadUseCase, authClient *cli
 		}
 	}
 
+	// API v1 group for backward compatibility
 	apiV1 := router.Group("/api/v1")
 	{
 		apiV1.GET("/threads", forumHandler.GetAllThread)
 		apiV1.GET("/thread/:id", forumHandler.GetThreadByID)
 
-	authGroupV1 := apiV1.Group("")
-	authGroupV1.Use(handler.AuthMiddleware(authClient))
-	{
-		authGroupV1.POST("/threads", forumHandler.CreateThread)
-		authGroupV1.POST("/threads/posts", forumHandler.CreatePost)
+		authGroupV1 := apiV1.Group("")
+		authGroupV1.Use(handler.AuthMiddleware(authClient))
+		{
+			authGroupV1.POST("/threads", forumHandler.CreateThread)
+			authGroupV1.POST("/threads/posts", forumHandler.CreatePost)
 
-		authGroupV1.GET("/threads/user/:id", forumHandler.GetThreadsByUserID)
-		authGroupV1.GET("/posts/user/:id", forumHandler.GetPostsByUserID)
-		authGroupV1.GET("/thread/:id/posts", forumHandler.GetPostsByThreadID)
+			authGroupV1.GET("/threads/user/:id", forumHandler.GetThreadsByUserID)
+			authGroupV1.GET("/posts/user/:id", forumHandler.GetPostsByUserID)
+			authGroupV1.GET("/thread/:id/posts", forumHandler.GetPostsByThreadID)
 
-		authGroupV1.DELETE("/posts/:id", forumHandler.DeletePostByID)
-		authGroupV1.DELETE("/threads/:id", forumHandler.DeleteTheadByID)
+			authGroupV1.DELETE("/posts/:id", forumHandler.DeletePostByID)
+			authGroupV1.DELETE("/threads/:id", forumHandler.DeleteTheadByID)
 
-		authGroupV1.PUT("/threads", forumHandler.EditThread)
+			authGroupV1.PUT("/threads", forumHandler.EditThread)
 
-		apiV1.GET("/ws/threads/:id", hub.ThreadChat)
+			apiV1.GET("/ws/threads/:id", hub.ThreadChat)
+		}
 	}
 
 	return router
