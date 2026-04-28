@@ -34,8 +34,9 @@ func SetupRouter(P usecase.PostUseCase, T usecase.ThreadUseCase, authClient *cli
 	// API v2 group
 	api := router.Group("/api/v2")
 	{
-		api.GET("/threads", forumHandler.GetAllThread)
-		api.GET("/thread/:id", forumHandler.GetThreadByID)
+	api.GET("/threads", forumHandler.GetAllThread)
+	api.GET("/thread/:id", forumHandler.GetThreadByID)
+	api.GET("/thread/:id/posts", forumHandler.GetPostsByThreadID)
 
 		authGroup := api.Group("")
 		authGroup.Use(handler.AuthMiddleware(authClient))
@@ -59,8 +60,9 @@ func SetupRouter(P usecase.PostUseCase, T usecase.ThreadUseCase, authClient *cli
 	// API v1 group for backward compatibility
 	apiV1 := router.Group("/api/v1")
 	{
-		apiV1.GET("/threads", forumHandler.GetAllThread)
-		apiV1.GET("/thread/:id", forumHandler.GetThreadByID)
+	apiV1.GET("/threads", forumHandler.GetAllThread)
+	apiV1.GET("/thread/:id", forumHandler.GetThreadByID)
+	apiV1.GET("/thread/:id/posts", forumHandler.GetPostsByThreadID)
 
 		authGroupV1 := apiV1.Group("")
 		authGroupV1.Use(handler.AuthMiddleware(authClient))
