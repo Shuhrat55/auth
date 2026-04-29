@@ -2,7 +2,8 @@ syntax = "proto3";
 
 package auth;
 
-option go_package = "github.com/DrusGalkin/forum/backend/auth/pkg/g_rpc;auth";
+option go_package = "github.com/Shuhrat55/auth/pkg/g_rpc;auth";
+
 
 service AuthService {
   rpc ValidateToken (TokenRequest) returns (TokenResponse) {}

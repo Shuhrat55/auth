@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/mattn/go-sqlite3"
@@ -10,7 +11,12 @@ import (
 )
 
 func NewSQLiteConnection() (*sql.DB, error) {
-	db, err := sql.Open("sqlite", "../../../data.db")
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "../data.db"
+	}
+
+	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		return nil, fmt.Errorf("ошибка подключения к SQLite: %w", err)
 	}

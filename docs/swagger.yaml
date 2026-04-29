@@ -15,12 +15,19 @@ definitions:
     required:
     - password
     type: object
-host: localhost:8080
+host: localhost:8081
 info:
-  contact: {}
-  description: API аутентификации пользователей
-  title: sigma Auth API
-  version: "6.0"
+  contact:
+    email: support@example.com
+    name: API Support
+    url: http://www.example.com/support
+  description: API сервис аутентификации и управления пользователями
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Auth Service API
+  version: "1.0"
 paths:
   /users:
     get:
@@ -260,7 +267,8 @@ paths:
       tags:
       - users
 securityDefinitions:
-  ApiKeyAuth:
+  BearerAuth:
+    description: 'Используйте формат: Bearer {token}'
     in: header
     name: Authorization
     type: apiKey

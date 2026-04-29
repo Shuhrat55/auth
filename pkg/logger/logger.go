@@ -18,7 +18,7 @@ func InitLogger() error {
 	var err error
 	Logger, err = config.Build()
 	if err != nil {
-		panic(fmt.Sprintf("Ошибка запуска логгера: %w", err))
+		panic(fmt.Sprintf("Ошибка запуска логгера: %v", err))
 	}
 	return nil
 }

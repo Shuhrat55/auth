@@ -1,14 +1,15 @@
 package app
 
 import (
-	_ "github.com/lib/pq"
 	"github.com/Shuhrat55/auth/internal/delivery/gin"
 	"github.com/Shuhrat55/auth/internal/repository"
 	"github.com/Shuhrat55/auth/internal/usecase"
 	"github.com/Shuhrat55/auth/pkg/database"
 	"github.com/Shuhrat55/auth/pkg/logger"
+	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 	"log"
+	"os"
 )
 
 func Run() {
@@ -23,10 +24,16 @@ func Run() {
 
 	router := gin.SetupRouter(userUseCase)
 
-	if err := router.Run(":8080"); err != nil {
-		logger.Logger.Fatal("Ошибка запуска сервера на порту :8080",
+	port := os.Getenv("AUTH_HTTP_PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	if err := router.Run(":" + port); err != nil {
+		logger.Logger.Fatal("Ошибка запуска сервера",
 			zap.Error(err),
 			zap.String("app", "database"))
 	}
-	logger.Logger.Info("Микросервис стартует на порту :8080")
+	logger.Logger.Info("Микросервис auth стартует",
+		zap.String("port", port))
 }
